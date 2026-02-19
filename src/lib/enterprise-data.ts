@@ -1,0 +1,178 @@
+import type { AISystem, DashboardMetrics, AuditLogEntry, Notification, ComplianceDeadline } from '@/types';
+
+export const currentUser = {
+  id: 'usr-001', email: 'sarah.chen@acmecorp.com', name: 'Sarah Chen',
+  role: 'compliance-officer' as const, department: 'Legal & Compliance',
+  avatar: undefined, lastLogin: '2026-02-19T10:30:00Z',
+  permissions: ['read', 'write', 'classify', 'assess', 'generate', 'approve'],
+  mfaEnabled: true,
+};
+
+export const aiSystems: AISystem[] = [
+  {
+    id: 'sys-001', name: 'TalentScreen AI', description: 'ML-powered resume screening and candidate ranking system for enterprise recruitment workflows',
+    version: '3.2.1', vendor: 'Internal', department: 'Human Resources', owner: 'Maria Lopez',
+    deployers: ['HR Recruitment Team', 'Talent Acquisition'], aiCapabilities: ['nlp', 'decision-making', 'profiling', 'ranking'],
+    domain: 'employment', subDomain: 'recruitment', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: false, isAutonomous: false, humanOversightLevel: 'human-in-the-loop',
+    deploymentDate: '2024-03-15', lastAssessmentDate: '2026-01-10', nextAssessmentDue: '2026-07-10',
+    dataCategories: ['personal', 'professional', 'educational'], outputTypes: ['scores', 'rankings', 'recommendations'],
+    intendedPurpose: 'Screen job applications and rank candidates based on qualifications and role fit',
+    geographicScope: ['eu', 'us-colorado', 'us-nyc'], regulatoryFrameworks: ['eu-ai-act', 'colorado-ai-act', 'nyc-ll144'],
+    riskTier: 'high', riskScore: 82, complianceStatus: 'partial',
+    tags: ['hr', 'recruitment', 'high-risk', 'pii'], metadata: { modelType: 'transformer', trainingDataSize: '2.4M records' },
+    createdAt: '2024-01-20T09:00:00Z', updatedAt: '2026-02-15T14:30:00Z', createdBy: 'usr-001',
+  },
+  {
+    id: 'sys-002', name: 'CustomerAssist Bot', description: 'GPT-4 powered customer service chatbot handling product inquiries, returns, and escalations',
+    version: '2.1.0', vendor: 'OpenAI / Internal', department: 'Customer Experience', owner: 'James Wright',
+    deployers: ['CX Team', 'Support Ops'], aiCapabilities: ['nlp', 'content-generation', 'sentiment-analysis'],
+    domain: 'customer-service', subDomain: 'support-automation', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: false, isAutonomous: false, humanOversightLevel: 'human-on-the-loop',
+    deploymentDate: '2024-06-01', lastAssessmentDate: '2026-02-01', nextAssessmentDue: '2026-08-01',
+    dataCategories: ['personal', 'transactional', 'behavioral'], outputTypes: ['text', 'recommendations', 'escalation-decisions'],
+    intendedPurpose: 'Provide automated tier-1 customer support with intelligent escalation',
+    geographicScope: ['eu', 'us-california'], regulatoryFrameworks: ['eu-ai-act'],
+    riskTier: 'limited', riskScore: 35, complianceStatus: 'compliant',
+    tags: ['chatbot', 'genai', 'customer-facing', 'transparency'], metadata: { modelProvider: 'OpenAI', avgResponseTime: '1.2s' },
+    createdAt: '2024-04-15T11:00:00Z', updatedAt: '2026-02-01T16:45:00Z', createdBy: 'usr-003',
+  },
+  {
+    id: 'sys-003', name: 'CreditRisk Engine', description: 'Gradient-boosted ML model for real-time creditworthiness assessment of consumer and SMB loan applicants',
+    version: '5.0.3', vendor: 'Internal', department: 'Financial Products', owner: 'David Kim',
+    deployers: ['Lending Team', 'Credit Operations', 'Risk Management'], aiCapabilities: ['decision-making', 'profiling', 'scoring', 'risk-assessment'],
+    domain: 'financial-services', subDomain: 'credit-assessment', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: true, isAutonomous: false, humanOversightLevel: 'human-in-the-loop',
+    deploymentDate: '2023-11-20', lastAssessmentDate: '2025-12-15', nextAssessmentDue: '2026-06-15',
+    dataCategories: ['personal', 'financial', 'behavioral', 'credit-history'], outputTypes: ['scores', 'decisions', 'explanations', 'risk-factors'],
+    intendedPurpose: 'Assess creditworthiness and generate risk scores for loan underwriting decisions',
+    geographicScope: ['eu', 'us-colorado'], regulatoryFrameworks: ['eu-ai-act', 'colorado-ai-act'],
+    riskTier: 'high', riskScore: 91, complianceStatus: 'non-compliant',
+    tags: ['finance', 'credit', 'high-risk', 'vulnerable-groups', 'pii'], metadata: { modelType: 'XGBoost', aukaScore: 0.847, giniCoeff: 0.694 },
+    createdAt: '2023-09-10T08:30:00Z', updatedAt: '2026-02-18T11:20:00Z', createdBy: 'usr-002',
+  },
+  {
+    id: 'sys-004', name: 'FraudShield RT', description: 'Real-time transaction fraud detection using deep learning anomaly detection across payment networks',
+    version: '4.1.2', vendor: 'Featurespace', department: 'Security & Risk', owner: 'Alex Petrov',
+    deployers: ['Fraud Operations', 'Payment Processing'], aiCapabilities: ['anomaly-detection', 'pattern-recognition', 'decision-making', 'real-time-scoring'],
+    domain: 'financial-services', subDomain: 'fraud-prevention', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: false, isAutonomous: true, humanOversightLevel: 'human-on-the-loop',
+    deploymentDate: '2024-01-10', lastAssessmentDate: '2026-01-20', nextAssessmentDue: '2026-07-20',
+    dataCategories: ['personal', 'financial', 'transactional', 'device-fingerprint'], outputTypes: ['alerts', 'decisions', 'scores', 'explanations'],
+    intendedPurpose: 'Detect and block potentially fraudulent transactions in real-time with sub-100ms latency',
+    geographicScope: ['eu', 'us-colorado', 'uk'], regulatoryFrameworks: ['eu-ai-act', 'colorado-ai-act'],
+    riskTier: 'high', riskScore: 76, complianceStatus: 'partial',
+    tags: ['fraud', 'real-time', 'autonomous', 'high-risk'], metadata: { avgLatency: '47ms', falsePositiveRate: '0.3%', modelType: 'LSTM-Autoencoder' },
+    createdAt: '2023-11-01T10:00:00Z', updatedAt: '2026-02-10T09:15:00Z', createdBy: 'usr-004',
+  },
+  {
+    id: 'sys-005', name: 'MedAssist Triage', description: 'Clinical decision support system for emergency department patient triage and priority assignment',
+    version: '1.4.0', vendor: 'Internal / Johns Hopkins Partnership', department: 'Healthcare Solutions', owner: 'Dr. Rachel Green',
+    deployers: ['Emergency Medicine', 'Clinical Ops'], aiCapabilities: ['decision-making', 'classification', 'risk-assessment', 'nlp'],
+    domain: 'healthcare', subDomain: 'clinical-decision-support', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: true, isAutonomous: false, humanOversightLevel: 'human-in-the-loop',
+    deploymentDate: '2025-06-01', lastAssessmentDate: '2026-01-15', nextAssessmentDue: '2026-04-15',
+    dataCategories: ['health', 'personal', 'biometric-derived'], outputTypes: ['triage-level', 'recommendations', 'risk-flags', 'explanations'],
+    intendedPurpose: 'Assist ED clinicians with patient triage by analyzing symptoms, vitals, and medical history',
+    geographicScope: ['eu'], regulatoryFrameworks: ['eu-ai-act'],
+    riskTier: 'high', riskScore: 95, complianceStatus: 'pending-review',
+    tags: ['healthcare', 'clinical', 'high-risk', 'vulnerable-groups', 'safety-critical'], metadata: { sensitivity: 0.94, specificity: 0.91, validationStudy: 'NCT-2025-4421' },
+    createdAt: '2025-02-01T08:00:00Z', updatedAt: '2026-02-17T15:00:00Z', createdBy: 'usr-005',
+  },
+  {
+    id: 'sys-006', name: 'ContentGuard AI', description: 'Automated content moderation system for UGC platforms using multimodal analysis',
+    version: '2.3.1', vendor: 'Internal', department: 'Trust & Safety', owner: 'Priya Sharma',
+    deployers: ['Content Moderation Team', 'Trust & Safety Ops'], aiCapabilities: ['content-classification', 'image-recognition', 'nlp', 'toxicity-detection'],
+    domain: 'content-moderation', subDomain: 'ugc-safety', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: true, isAutonomous: true, humanOversightLevel: 'human-on-the-loop',
+    deploymentDate: '2024-09-15', lastAssessmentDate: '2026-02-05', nextAssessmentDue: '2026-08-05',
+    dataCategories: ['user-generated', 'personal', 'behavioral'], outputTypes: ['classifications', 'decisions', 'confidence-scores'],
+    intendedPurpose: 'Automatically detect and action harmful content including hate speech, CSAM, and misinformation',
+    geographicScope: ['eu', 'us-california', 'uk'], regulatoryFrameworks: ['eu-ai-act', 'eu-dsa'],
+    riskTier: 'limited', riskScore: 42, complianceStatus: 'compliant',
+    tags: ['content-moderation', 'trust-safety', 'multimodal', 'autonomous'], metadata: { accuracy: 0.96, avgProcessingTime: '230ms', dailyVolume: '12M items' },
+    createdAt: '2024-07-01T09:00:00Z', updatedAt: '2026-02-05T12:30:00Z', createdBy: 'usr-006',
+  },
+  {
+    id: 'sys-007', name: 'InsurePrice ML', description: 'Dynamic insurance premium pricing model using actuarial ML for auto and home insurance products',
+    version: '3.0.0', vendor: 'Internal', department: 'Insurance Products', owner: 'Michael Torres',
+    deployers: ['Underwriting', 'Product Pricing'], aiCapabilities: ['pricing', 'risk-assessment', 'profiling', 'prediction'],
+    domain: 'insurance', subDomain: 'premium-pricing', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: true, isAutonomous: false, humanOversightLevel: 'human-in-the-loop',
+    deploymentDate: '2025-01-15', lastAssessmentDate: '2026-01-30', nextAssessmentDue: '2026-07-30',
+    dataCategories: ['personal', 'financial', 'claims-history', 'behavioral', 'geographic'], outputTypes: ['premiums', 'risk-scores', 'factor-explanations'],
+    intendedPurpose: 'Calculate risk-adjusted insurance premiums ensuring actuarial fairness and regulatory compliance',
+    geographicScope: ['eu', 'us-colorado'], regulatoryFrameworks: ['eu-ai-act', 'colorado-ai-act'],
+    riskTier: 'high', riskScore: 88, complianceStatus: 'partial',
+    tags: ['insurance', 'pricing', 'high-risk', 'vulnerable-groups', 'fairness'], metadata: { modelType: 'GLM + GBM ensemble', biasMetric: 'disparate-impact-0.83' },
+    createdAt: '2024-10-01T10:00:00Z', updatedAt: '2026-02-14T16:00:00Z', createdBy: 'usr-007',
+  },
+  {
+    id: 'sys-008', name: 'DocuExtract AI', description: 'Intelligent document processing for automated invoice, contract, and compliance document extraction',
+    version: '1.8.2', vendor: 'Internal', department: 'Operations', owner: 'Lisa Park',
+    deployers: ['Finance Ops', 'Legal', 'Procurement'], aiCapabilities: ['ocr', 'nlp', 'entity-extraction', 'classification'],
+    domain: 'document-processing', subDomain: 'intelligent-automation', usesPersonalData: true, usesBiometricData: false,
+    affectsVulnerableGroups: false, isAutonomous: false, humanOversightLevel: 'human-on-the-loop',
+    deploymentDate: '2025-03-01', lastAssessmentDate: '2026-02-10', nextAssessmentDue: '2026-08-10',
+    dataCategories: ['business', 'financial', 'contractual', 'personal'], outputTypes: ['extracted-fields', 'classifications', 'confidence-scores'],
+    intendedPurpose: 'Automate document data extraction to reduce manual processing time by 80%',
+    geographicScope: ['eu'], regulatoryFrameworks: ['eu-ai-act'],
+    riskTier: 'minimal', riskScore: 15, complianceStatus: 'compliant',
+    tags: ['document-processing', 'automation', 'minimal-risk'], metadata: { accuracy: 0.98, documentsProcessed: '450K/month' },
+    createdAt: '2025-01-15T11:00:00Z', updatedAt: '2026-02-10T10:00:00Z', createdBy: 'usr-008',
+  },
+];
+
+export const upcomingDeadlines: ComplianceDeadline[] = [
+  { id: 'dl-001', date: '2026-02-01', description: 'Colorado AI Act — Full deployer compliance required', urgency: 'critical', regulation: 'Colorado AI Act', status: 'overdue', assignee: 'Sarah Chen' },
+  { id: 'dl-002', date: '2026-04-15', description: 'MedAssist Triage — Quarterly conformity re-assessment', urgency: 'high', regulation: 'EU AI Act', status: 'upcoming', assignee: 'Dr. Rachel Green' },
+  { id: 'dl-003', date: '2026-06-01', description: 'Colorado AI Act — First annual bias audit submission', urgency: 'high', regulation: 'Colorado AI Act', status: 'upcoming', assignee: 'David Kim' },
+  { id: 'dl-004', date: '2026-07-05', description: 'NYC LL144 — Annual AEDT bias audit renewal', urgency: 'medium', regulation: 'NYC LL144', status: 'upcoming', assignee: 'Maria Lopez' },
+  { id: 'dl-005', date: '2026-08-02', description: 'EU AI Act — High-risk system requirements enforcement (Title III Ch.2)', urgency: 'critical', regulation: 'EU AI Act', status: 'upcoming', assignee: 'Sarah Chen' },
+  { id: 'dl-006', date: '2026-08-02', description: 'EU AI Act — All Annex IV documentation must be submitted', urgency: 'critical', regulation: 'EU AI Act', status: 'upcoming', assignee: 'Sarah Chen' },
+];
+
+export const recentActivity: AuditLogEntry[] = [
+  { id: 'log-001', timestamp: '2026-02-19T12:45:00Z', action: 'classify', userId: 'usr-001', userName: 'Sarah Chen', userRole: 'compliance-officer', entityType: 'system', entityId: 'sys-005', entityName: 'MedAssist Triage', details: 'Re-classified system as HIGH risk with 95% confidence', ipAddress: '10.0.1.42', metadata: { previousTier: 'high', newTier: 'high', confidence: 0.95 } },
+  { id: 'log-002', timestamp: '2026-02-19T11:30:00Z', action: 'generate', userId: 'usr-001', userName: 'Sarah Chen', userRole: 'compliance-officer', entityType: 'document', entityId: 'doc-003', entityName: 'CreditRisk Engine — Annex IV', details: 'Auto-generated Sections 1-3 from development artifacts', ipAddress: '10.0.1.42' },
+  { id: 'log-003', timestamp: '2026-02-19T10:15:00Z', action: 'assess', userId: 'usr-002', userName: 'Marcus Johnson', userRole: 'auditor', entityType: 'assessment', entityId: 'ca-004', entityName: 'FraudShield RT — Conformity Assessment', details: 'Updated Article 15 requirement to FAILED — adversarial testing incomplete', ipAddress: '10.0.1.88' },
+  { id: 'log-004', timestamp: '2026-02-18T16:00:00Z', action: 'approve', userId: 'usr-009', userName: 'Jennifer Walsh', userRole: 'dpo', entityType: 'document', entityId: 'doc-006', entityName: 'ContentGuard AI — Transparency Report', details: 'Approved transparency documentation for Article 50 compliance', ipAddress: '10.0.1.15' },
+  { id: 'log-005', timestamp: '2026-02-18T14:20:00Z', action: 'create', userId: 'usr-005', userName: 'Dr. Rachel Green', userRole: 'compliance-officer', entityType: 'system', entityId: 'sys-009', entityName: 'PathologyAssist AI', details: 'Registered new AI system for pathology image analysis', ipAddress: '10.0.2.33' },
+  { id: 'log-006', timestamp: '2026-02-18T11:00:00Z', action: 'update', userId: 'usr-007', userName: 'Michael Torres', userRole: 'compliance-officer', entityType: 'system', entityId: 'sys-007', entityName: 'InsurePrice ML', details: 'Updated bias metrics after Q1 fairness audit — disparate impact ratio improved to 0.87', ipAddress: '10.0.1.55' },
+  { id: 'log-007', timestamp: '2026-02-17T15:30:00Z', action: 'submit', userId: 'usr-001', userName: 'Sarah Chen', userRole: 'compliance-officer', entityType: 'assessment', entityId: 'ca-002', entityName: 'CustomerAssist Bot — Conformity Assessment', details: 'Submitted conformity assessment to internal review board', ipAddress: '10.0.1.42' },
+  { id: 'log-008', timestamp: '2026-02-17T09:00:00Z', action: 'export', userId: 'usr-002', userName: 'Marcus Johnson', userRole: 'auditor', entityType: 'document', entityId: 'doc-001', entityName: 'TalentScreen AI — Annex IV Package', details: 'Exported evidence package as PDF (142 pages, 24.3 MB)', ipAddress: '10.0.1.88' },
+];
+
+export const notifications: Notification[] = [
+  { id: 'ntf-001', type: 'deadline', severity: 'critical', title: 'OVERDUE: Colorado AI Act Compliance', message: 'Colorado AI Act full compliance was due Feb 1, 2026. 3 systems remain non-compliant.', link: '/regulations', read: false, createdAt: '2026-02-02T00:00:00Z' },
+  { id: 'ntf-002', type: 'finding', severity: 'critical', title: 'Critical Finding: CreditRisk Engine', message: 'Article 15 assessment failed — adversarial robustness testing not conducted. Remediation required within 30 days.', link: '/conformity', read: false, createdAt: '2026-02-18T14:00:00Z' },
+  { id: 'ntf-003', type: 'regulation-update', severity: 'high', title: 'EU AI Act: New Guidance Published', message: 'European Commission published implementation guidance for Annex IV technical documentation requirements.', read: false, createdAt: '2026-02-15T09:00:00Z' },
+  { id: 'ntf-004', type: 'assessment', severity: 'medium', title: 'Assessment Due: MedAssist Triage', message: 'Quarterly conformity re-assessment due April 15, 2026. Schedule with notified body.', link: '/conformity', read: true, createdAt: '2026-02-10T08:00:00Z' },
+  { id: 'ntf-005', type: 'deadline', severity: 'high', title: '164 Days to EU AI Act Enforcement', message: 'High-risk AI system requirements under Title III Chapter 2 take effect August 2, 2026.', link: '/regulations', read: true, createdAt: '2026-02-19T00:00:00Z' },
+];
+
+export function getDashboardMetrics(): DashboardMetrics {
+  const systemsByRisk = { unacceptable: 0, high: 0, limited: 0, minimal: 0 };
+  const systemsByCompliance: Record<string, number> = { compliant: 0, partial: 0, 'non-compliant': 0, 'pending-review': 0, exempt: 0 };
+  aiSystems.forEach(s => { systemsByRisk[s.riskTier]++; systemsByCompliance[s.complianceStatus]++; });
+  return {
+    totalSystems: aiSystems.length,
+    systemsByRisk: systemsByRisk as any,
+    systemsByCompliance: systemsByCompliance as any,
+    overallComplianceScore: 58,
+    documentsComplete: 3,
+    documentsTotal: 8,
+    assessmentsPassed: 4,
+    assessmentsTotal: 8,
+    upcomingDeadlines,
+    recentActivity,
+    riskTrend: [
+      { month: 'Sep 2025', score: 72 }, { month: 'Oct 2025', score: 68 }, { month: 'Nov 2025', score: 65 },
+      { month: 'Dec 2025', score: 61 }, { month: 'Jan 2026', score: 58 }, { month: 'Feb 2026', score: 58 },
+    ],
+    complianceTrend: [
+      { month: 'Sep 2025', score: 32 }, { month: 'Oct 2025', score: 38 }, { month: 'Nov 2025', score: 42 },
+      { month: 'Dec 2025', score: 48 }, { month: 'Jan 2026', score: 54 }, { month: 'Feb 2026', score: 58 },
+    ],
+  };
+}

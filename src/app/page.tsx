@@ -1,63 +1,41 @@
 'use client';
 
-import { useState } from 'react';
-import { DashboardOverview } from '@/components/dashboard/DashboardOverview';
-import { AISystemsRegistry } from '@/components/systems/AISystemsRegistry';
-import { RiskClassificationView } from '@/components/classification/RiskClassificationView';
-import { DocumentationCenter } from '@/components/documentation/DocumentationCenter';
-import { ConformityAssessment } from '@/components/conformity/ConformityAssessment';
-import { RegulationTracker } from '@/components/regulations/RegulationTracker';
+import { useAppStore } from '@/lib/store';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
+import { DashboardView } from '@/components/dashboard/DashboardView';
+import { SystemsView } from '@/components/systems/SystemsView';
+import { ClassificationView } from '@/components/classification/ClassificationView';
+import { DocumentsView } from '@/components/documents/DocumentsView';
+import { AssessmentsView } from '@/components/assessment/AssessmentsView';
+import { RegulationsView } from '@/components/regulations/RegulationsView';
+import { AuditLogView } from '@/components/audit/AuditLogView';
+import { SettingsView } from '@/components/settings/SettingsView';
 
-export type ActiveView = 
-  | 'dashboard' 
-  | 'systems' 
-  | 'classification' 
-  | 'documentation' 
-  | 'conformity' 
-  | 'regulations';
+const views: Record<string, React.ComponentType> = {
+  dashboard: DashboardView,
+  systems: SystemsView,
+  classification: ClassificationView,
+  documents: DocumentsView,
+  assessments: AssessmentsView,
+  regulations: RegulationsView,
+  'audit-log': AuditLogView,
+  settings: SettingsView,
+};
 
-export default function HomePage() {
-    const [activeView, setActiveView] = useState<ActiveView>('dashboard');
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const renderView = () => {
-        switch (activeView) {
-          case 'dashboard':
-                    return <DashboardOverview onNavigate={setActiveView} />;
-          case 'systems':
-                    return <AISystemsRegistry />;
-          case 'classification':
-                    return <RiskClassificationView />;
-          case 'documentation':
-                    return <DocumentationCenter />;
-          case 'conformity':
-                    return <ConformityAssessment />;
-          case 'regulations':
-                    return <RegulationTracker />;
-          default:
-                    return <DashboardOverview onNavigate={setActiveView} />;
-        }
-  };
+export default function Home() {
+  const { activeView, sidebarCollapsed } = useAppStore();
+  const View = views[activeView] || DashboardView;
 
   return (
-        <div className="flex h-screen bg-gray-50">
-              <Sidebar 
-                        activeView={activeView} 
-                onNavigate={setActiveView}
-                        isOpen={sidebarOpen}
-                        onToggle={() => setSidebarOpen(!sidebarOpen)}
-                      />
-              <div className="flex-1 flex flex-col overflow-hidden">
-                      <Header 
-                                  onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-                                  activeView={activeView}
-                                />
-                      <main className="flex-1 overflow-y-auto p-6">
-                        {renderView()}
-                      </main>main>
-              </div>div>
-        </div>div>
-      );
-}</div>
+    <div className="flex h-screen overflow-hidden bg-slate-950">
+      <Sidebar />
+      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
+        <Header />
+        <main className="flex-1 overflow-y-auto scrollbar-thin p-6">
+          <View />
+        </main>
+      </div>
+    </div>
+  );
+}
