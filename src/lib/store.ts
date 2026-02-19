@@ -79,3 +79,5 @@ export const useAppStore = create<AppState>((set, get) => ({
     } : s)
   })),
 }));
+
+export const useStore = useAppStore;
